@@ -67,8 +67,10 @@ public class Lesson11Test {
         // 6 | click | id=loginform-password |
         // Ввести логин и пароль
         driver.findElement(By.id("loginform-username")).sendKeys("Irararira");
+        Assert.assertEquals(driver.findElement(By.id("loginform-username")).getAttribute("value"), "Irararira");
 
         driver.findElement(By.id("loginform-password")).sendKeys("Qwer123");
+        Assert.assertEquals(driver.findElement(By.id("loginform-password")).getAttribute("value"), "Qwer123");
         // 7 | selectFrame | index=0 |
         // Установить фложок "Запомнить"
         driver.switchTo().frame(0);
@@ -135,6 +137,7 @@ public class Lesson11Test {
         // 5 | type | id=postTitle | Путешествие во Львов
         // Ввести заголовок
         driver.findElement(By.id("postTitle")).sendKeys("Путешествие во Львов");
+        Assert.assertEquals(driver.findElement(By.id("postTitle")).getAttribute("value"), "Путешествие во Львов");
         // 6 | click | id=postTitle |
         // Установить курсор мыши в поле "Сообщение:"
         driver.findElement(By.id("postTitle")).click();
@@ -151,6 +154,8 @@ public class Lesson11Test {
         }
         // Ввод текста
         driver.findElement(By.xpath("//html/body")).sendKeys("Львов потрясающе красивый город со множеством достопримечательностей.");
+        Assert.assertEquals(driver.findElement(By.xpath("//html/body")).getText(),
+                "Львов потрясающе красивый город со множеством достопримечательностей.");
         // 11 | selectFrame | relative=parent |
         // Нажать "Сохранить черновик"
         driver.switchTo().defaultContent();
@@ -170,4 +175,131 @@ public class Lesson11Test {
         // Закрыть окно браузера
         driver.close();
     }
+
+    @Test
+    public void negative() {
+        // Test name: Negative
+        // Step # | name | target | value | comment
+        // 1 | open | http://diary.ru/ |  |
+        driver.get("https://diary.ru/");
+        Cookie _csrf = new Cookie("_csrf", "2d5890af3e657b5b38b99b4c48dc121a26585d98792aee88fb49d4402f926840a%3A2%3A%7Bi%3A0%3Bs%3A10%3A%22_identity_%22%3Bi%3A1%3Bs%3A52%3A%22%5B3552238%2C%22JuVQDRG-v6prtZfcWVV7MOtqVQn2Eh-x%22%2C2592000%5D%22%3B%7D");
+        Cookie _session = new Cookie("_session", "lkt1uua8p4087blm45jp8jg9m8");
+        Cookie _identity = new Cookie("_identity_", "2d5890af3e657b5b38b99b4c48dc121a26585d98792aee88fb49d4402f926840a%3A2%3A%7Bi%3A0%3Bs%3A10%3A%22_identity_%22%3Bi%3A1%3Bs%3A52%3A%22%5B3552238%2C%22JuVQDRG-v6prtZfcWVV7MOtqVQn2Eh-x%22%2C2592000%5D%22%3B%7D");
+        driver.manage().addCookie(_csrf);
+        driver.manage().addCookie(_session);
+        driver.manage().addCookie(_identity);
+        // 2 | setWindowSize | 1552x840 |  |
+        driver.manage().window().setSize(new Dimension(1552, 840));
+        driver.findElement(By.linkText("Вход")).click();
+        // Ожидание загрузки элемента
+        {
+            WebDriverWait wait = new WebDriverWait(driver, 30);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("a > .i-menu-newpost")));
+        }
+        // 3 | click | css=#drop_right_menu > .icon-bar:nth-child(3) |  |
+        driver.findElement(By.cssSelector("#drop_right_menu > .icon-bar:nth-child(3)")).click();
+        // 4 | click | linkText=Ссылки |  |
+        driver.findElement(By.linkText("Ссылки")).click();
+        {
+            WebDriverWait wait = new WebDriverWait(driver, 30);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Добавить")));
+        }
+        driver.findElement(By.linkText("Добавить")).click();
+
+        // 5 | click | id=editform-ord |  |
+        // Ожидание загрузки элемента
+        {
+            WebDriverWait wait = new WebDriverWait(driver, 30);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".modal-body")));
+        }
+        driver.findElement(By.id("editform-ord")).click();
+        // 6 | type | id=editform-ord | 123 |
+        driver.findElement(By.id("editform-ord")).sendKeys("123");
+        // 7 | click | id=editform-title |  |
+        driver.findElement(By.id("editform-title")).click();
+        // 8 | type | id=editform-title | 123 |
+        driver.findElement(By.id("editform-title")).sendKeys("123");
+        // 9 | click | id=editform-href |  |
+        driver.findElement(By.id("editform-href")).click();
+        // 10 | type | id=editform-href | 123 |
+        driver.findElement(By.id("editform-href")).sendKeys("123");
+        // 11 | click | id=editform-description |  |
+        driver.findElement(By.id("editform-description")).click();
+        // 12 | type | id=editform-description | 123 |
+        driver.findElement(By.id("editform-description")).sendKeys("123");
+        // 13 | click | id=btn_add_link |  |
+        driver.findElement(By.id("btn_add_link")).click();
+        // 14 | click | css=.field-editform-href > .help-block |  |
+        {
+            WebDriverWait wait = new WebDriverWait(driver, 30);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".has-error")));
+        }
+
+        Assert.assertEquals(driver.findElement(By.cssSelector(".has-error > p")).getText(), "Значение «Ссылка» не является правильным URL.");
+
+        driver.findElement(By.cssSelector(".field-editform-href > .help-block")).click();
+        // 15 | click | css=#add_link .i-close |  |
+        driver.findElement(By.cssSelector("#add_link .i-close")).click();
+        // 16 | close |  |  |
+        driver.close();
+    }
+
+
+    @Test
+    public void newlink() {
+        // Test name: New link
+        // Step # | name | target | value | comment
+        // 1 | open | https:/diary.ru/ |  |
+        driver.get("https://diary.ru/");
+        Cookie _csrf = new Cookie("_csrf", "2d5890af3e657b5b38b99b4c48dc121a26585d98792aee88fb49d4402f926840a%3A2%3A%7Bi%3A0%3Bs%3A10%3A%22_identity_%22%3Bi%3A1%3Bs%3A52%3A%22%5B3552238%2C%22JuVQDRG-v6prtZfcWVV7MOtqVQn2Eh-x%22%2C2592000%5D%22%3B%7D");
+        Cookie _session = new Cookie("_session", "lkt1uua8p4087blm45jp8jg9m8");
+        Cookie _identity = new Cookie("_identity_", "2d5890af3e657b5b38b99b4c48dc121a26585d98792aee88fb49d4402f926840a%3A2%3A%7Bi%3A0%3Bs%3A10%3A%22_identity_%22%3Bi%3A1%3Bs%3A52%3A%22%5B3552238%2C%22JuVQDRG-v6prtZfcWVV7MOtqVQn2Eh-x%22%2C2592000%5D%22%3B%7D");
+        driver.manage().addCookie(_csrf);
+        driver.manage().addCookie(_session);
+        driver.manage().addCookie(_identity);
+        // 2 | setWindowSize | 1552x840 |  |
+        driver.manage().window().setSize(new Dimension(1552, 840));
+        driver.findElement(By.linkText("Вход")).click();
+        {
+            WebDriverWait wait = new WebDriverWait(driver, 30);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("a > .i-menu-newpost")));
+        }
+        // 3 | click | css=#drop_right_menu > .icon-bar:nth-child(3) |  |
+        driver.findElement(By.cssSelector("#drop_right_menu > .icon-bar:nth-child(3)")).click();
+        // 4 | click | linkText=Ссылки |  |
+        driver.findElement(By.linkText("Ссылки")).click();
+        {
+            WebDriverWait wait = new WebDriverWait(driver, 30);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Добавить")));
+        }
+
+        driver.findElement(By.linkText("Добавить")).click();
+        // 10 | click | id=editform-ord |  |
+        driver.findElement(By.id("editform-ord")).click();
+        // 11 | type | id=editform-ord | 123 |
+        driver.findElement(By.id("editform-ord")).sendKeys("123");
+        // 12 | click | id=editform-title |  |
+        driver.findElement(By.id("editform-title")).click();
+        // 13 | type | id=editform-title | 123 |
+        driver.findElement(By.id("editform-title")).sendKeys("123");
+        // 14 | click | id=editform-href |  |
+        driver.findElement(By.id("editform-href")).click();
+        // 15 | type | id=editform-href | https://www.youtube.com/ |
+        driver.findElement(By.id("editform-href")).sendKeys("https://www.youtube.com/");
+        // 16 | click | id=editform-description |  |
+        driver.findElement(By.id("editform-description")).click();
+        // 17 | type | id=editform-description | 123 |
+        driver.findElement(By.id("editform-description")).sendKeys("123");
+        // 18 | click | id=btn_add_link |  |
+        driver.findElement(By.id("btn_add_link")).click();
+        {
+            WebDriverWait wait = new WebDriverWait(driver, 30);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".post-content")));
+        }
+        Assert.assertEquals(driver.findElement(By.cssSelector(".post-content > div > a")).getAttribute("href"),
+                "https://www.youtube.com/");
+        // 19 | close |  |  |
+        driver.close();
+    }
 }
+
