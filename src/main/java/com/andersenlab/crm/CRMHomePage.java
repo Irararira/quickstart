@@ -1,5 +1,6 @@
 package com.andersenlab.crm;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,24 +20,28 @@ public class CRMHomePage {
         this.driver = driver;
     }
 
+    @Step("Wait element invisible with Locator {locator}")
     public CRMHomePage waitElementInvisible(By locator) {
         WebDriverWait wait = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS);
         wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
         return this;
     }
 
+    @Step("Wait element visible with Locator {locator}")
     public CRMHomePage waitElementVisible(By locator) {
         WebDriverWait wait = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS);
         wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         return this;
     }
 
+    @Step("Have element with linkText {linkText}")
     public CRMHomePage haveElement(String linkText) {
         List<WebElement> elements = driver.findElements(By.linkText(linkText));
         assert (elements.size() > 0);
         return this;
     }
 
+    @Step("Mouse over with linkText {linkText}")
     public CRMHomePage mouseOver(String linkText) {
         WebElement element = driver.findElement(By.linkText(linkText));
         Actions builder = new Actions(driver);
@@ -44,6 +49,7 @@ public class CRMHomePage {
         return this;
     }
 
+    @Step("Click on element with Locator {locator}")
     public CRMHomePage click(By locator) {
         driver.findElement(locator).click();
         return this;
